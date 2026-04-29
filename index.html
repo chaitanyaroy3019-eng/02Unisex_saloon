@@ -76,6 +76,19 @@ nav ul {
   align-items: center;
 }
 
+nav ul li a {
+  color: inherit;
+  text-decoration: none;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
 nav ul li {
   position: relative;
   cursor: pointer;
@@ -149,19 +162,23 @@ nav ul li:hover::after {
   overflow: hidden;
 }
 
-.hero-bg {
+.hero-slides {
   position: absolute;
   inset: 0;
-  background-image: url('images/saloon_home1.png');
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transform: scale(1.04);
-  transition: transform 8s ease;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
 }
 
-.hero.loaded .hero-bg {
-  transform: scale(1);
+.hero-slide.active {
+  opacity: 1;
 }
 
 .hero-overlay {
@@ -705,19 +722,21 @@ nav ul li:hover::after {
 <nav id="navbar">
   <img src="images/saloon_logo.jpg" alt="02+ Unisex Salon" class="nav-logo">
   <ul>
-    <li onclick="scrollTo('home')">Home</li>
-    <li onclick="scrollTo('services')">Services</li>
-    <li onclick="scrollTo('gallery')">Gallery</li>
-    <li class="nav-appointment" onclick="window.location.href='#appointment'">
-      Appointment
-      <span class="book-sub">Book Now</span>
-    </li>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li class="nav-appointment"><a href="#appointment">Appointment<span class="book-sub">Book Now</span></a></li>
   </ul>
 </nav>
 
 <!-- ══════════════════════════ HERO ══════════════════════════ -->
 <section id="home" class="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-slides">
+    <div class="hero-slide" style="background-image:url('images/saloon_home1.png')"></div>
+    <div class="hero-slide" style="background-image:url('images/saloon_interior_chairset.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('images/saloon_manychairs.png')"></div>
+    <div class="hero-slide" style="background-image:url('images/saloon_servicepic.jpg')"></div>
+  </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-eyebrow">Premium Unisex Salon</div>
@@ -847,7 +866,7 @@ nav ul li:hover::after {
   <div class="calendly-wrapper">
     <!-- ★ REPLACE the URL below with your actual Calendly link, e.g. https://calendly.com/chaitanyaroy3019 -->
     <div class="calendly-inline-widget"
-         data-url="https://calendly.com/chaitanyaroy3019?hide_gdpr_banner=1&background_color=111111&text_color=f8f5ef&primary_color=c9a84c"
+         data-url="https://calendly.com/YOUR-CALENDLY-USERNAME?hide_gdpr_banner=1&background_color=111111&text_color=f8f5ef&primary_color=c9a84c"
          style="min-width:320px;height:700px;">
     </div>
   </div>
@@ -884,10 +903,15 @@ nav ul li:hover::after {
 <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 
 <script>
-  /* Hero entrance animation */
-  window.addEventListener('load', () => {
-    document.querySelector('.hero').classList.add('loaded');
-  });
+  /* Hero slideshow — slow crossfade every 5 seconds */
+  const slides = document.querySelectorAll('.hero-slide');
+  let current = 0;
+  slides[current].classList.add('active');
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 5000);
 
   /* Navbar shrink on scroll */
   window.addEventListener('scroll', () => {
